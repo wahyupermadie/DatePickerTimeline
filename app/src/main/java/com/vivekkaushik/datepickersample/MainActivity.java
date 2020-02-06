@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DatePickerTimeline datePickerTimeline = findViewById(R.id.dateTimeline);
-        datePickerTimeline.setInitialDate(2019, 10, 12);
+        datePickerTimeline.setInitialDate(2020, 1,6 );
         Calendar date = Calendar.getInstance();
         date.add(Calendar.DAY_OF_YEAR, 5);
         datePickerTimeline.setActiveDate(date);
@@ -36,8 +36,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onDisabledDateSelected: " + day);
             }
         });
-
-        Date[] dates = {Calendar.getInstance().getTime()};
-        datePickerTimeline.deactivateDates(dates);
     }
 }
