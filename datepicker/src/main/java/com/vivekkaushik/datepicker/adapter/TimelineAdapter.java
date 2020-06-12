@@ -202,13 +202,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 return true;
             }
 
-            if (selectedPosition == position) {
+            if (selectedPosition == position && position != 0) {
                 rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_shape));
                 monthView.setTextColor(Color.WHITE);
                 dateView.setTextColor(Color.WHITE);
                 dayView.setTextColor(Color.WHITE);
                 selectedView = rootView;
-            } else if (oldPost == position){
+            } else if (position == 0){
                 rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
                 monthView.setTextColor(Color.BLACK);
                 dateView.setTextColor(Color.BLACK);
