@@ -120,8 +120,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                             notifyItemChanged(i);
                         }
                     }
-                    selectedPosition = position;
-                    selectedView = v;
                     if (listener != null) listener.onDisabledDateSelected(year, month, day, dayOfWeek, isDisabled);
                 }
             }

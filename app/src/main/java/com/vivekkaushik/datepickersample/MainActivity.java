@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DatePickerTimeline datePickerTimeline = findViewById(R.id.dateTimeline);
-        datePickerTimeline.setInitialDate("2020-06-15", 20);
+        datePickerTimeline.setInitialDate("2020-06-18", 10);
         Calendar date = Calendar.getInstance();
-        date.setTime(parseDate("2020-06-18"));
+        date.setTime(parseDate("2020-06-22"));
         datePickerTimeline.setActiveDate(date);
         datePickerTimeline.setDateRangeDeactive(parseDate("2020-06-15"), 1);
         datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
