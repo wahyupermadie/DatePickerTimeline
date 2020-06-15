@@ -12,6 +12,7 @@ import com.vivekkaushik.datepicker.adapter.TimelineAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class TimelineView extends RecyclerView {
 
     private int monthTextColor, dateTextColor, dayTextColor, selectedColor, disabledColor;
 //    private float monthTextSize, dateTextSize, dayTextSize;
-    private int year, month, date;
+    private int year, month, date, adapterSize;
 
     public TimelineView(@NonNull Context context) {
         super(context);
@@ -42,11 +43,16 @@ public class TimelineView extends RecyclerView {
         year = 1970;
         month = 0;
         date = 1;
+        adapterSize = 10;
         setHasFixedSize(true);
         setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
                 false));
-        adapter = new TimelineAdapter(this, -1);
+        adapter = new TimelineAdapter(this, -1, adapterSize);
         setAdapter(adapter);
+    }
+
+    private void setAdapterSize(int size){
+        adapter.setAdapterSize(size);
     }
 
     public int getMonthTextColor() {
@@ -105,10 +111,12 @@ public class TimelineView extends RecyclerView {
         adapter.setDateSelectedListener(listener);
     }
 
-    public void setInitialDate(int year, int month, int date) {
+    public void setInitialDate(int year, int month, int date, int adapterSize) {
         this.year = year;
         this.month = month;
         this.date = date;
+        this.adapterSize = adapterSize;
+        setAdapterSize(adapterSize);
         invalidate();
     }
 
@@ -130,7 +138,7 @@ public class TimelineView extends RecyclerView {
 
     }
 
-    public void deactivateDates(Date[] deactivatedDates) {
+    public void deactivateDates(ArrayList<Date> deactivatedDates) {
         adapter.disableDates(deactivatedDates);
     }
 }

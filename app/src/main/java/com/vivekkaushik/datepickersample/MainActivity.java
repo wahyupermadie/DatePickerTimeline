@@ -8,8 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.vivekkaushik.datepicker.DatePickerTimeline;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import org.joda.time.DateTime;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -20,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DatePickerTimeline datePickerTimeline = findViewById(R.id.dateTimeline);
-        datePickerTimeline.setInitialDate(2020, 1,6 );
+        datePickerTimeline.setInitialDate("2020-06-15", 20);
         Calendar date = Calendar.getInstance();
-        date.add(Calendar.DAY_OF_YEAR, 5);
-        datePickerTimeline.setActiveDate(date);
+        date.add(Calendar.DAY_OF_YEAR, 1);
+        datePickerTimeline.setDateRangeDeactive(parseDate("2020-06-15"), 1);
         datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
@@ -36,5 +43,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onDisabledDateSelected: " + day);
             }
         });
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

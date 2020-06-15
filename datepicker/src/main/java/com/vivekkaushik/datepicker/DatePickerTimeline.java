@@ -5,13 +5,21 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.vivekkaushik.datepicker.helper.Utils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
+import org.joda.time.DateTime;
 
 public class DatePickerTimeline extends LinearLayout {
     private TimelineView timelineView;
@@ -52,7 +60,6 @@ public class DatePickerTimeline extends LinearLayout {
 //        timelineView.setDateTextSize(a.getDimension(R.styleable.DatePickerTimeline_dateTextSize, getResources().getDimension(R.dimen.dateTextSize)));
 //        timelineView.setDayTextSize(a.getDimension(R.styleable.DatePickerTimeline_dayTextSize, getResources().getDimension(R.dimen.dayTextSize)));
 
-        timelineView.deactivateDates(new Date[0]);
         a.recycle();
         timelineView.invalidate();
     }
@@ -99,12 +106,22 @@ public class DatePickerTimeline extends LinearLayout {
 
     /**
      * Set a Start date for the calendar (Default, 1 Jan 1970)
-     * @param year start year
-     * @param month start month
      * @param date start date
      */
-    public void setInitialDate(int year, int month, int date) {
-        timelineView.setInitialDate(year, month, date);
+    public void setInitialDate(String date, int maxRange) {
+        Date currentDate = parseDate(date);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentDate);
+
+        timelineView.setInitialDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), maxRange);
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     /**
@@ -115,12 +132,36 @@ public class DatePickerTimeline extends LinearLayout {
         timelineView.setActiveDate(date);
     }
 
+
+    public void setDateRangeDeactive(Date curDate, int range){
+        DateTime dtOrg = new DateTime(curDate);
+        DateTime dtRange = dtOrg.plusDays(range);
+
+        deactivateDates(Objects.requireNonNull(Utils.Companion.getDateRange(dtOrg.toString(), dtRange.toString())));
+    }
     /**
      * Deactivate dates from the calendar. User won't be able to select
      * the deactivated date.
      * @param dates Array of Dates
      */
-    public void deactivateDates(Date[] dates) {
-        timelineView.deactivateDates(dates);
+    public void deactivateDates(ArrayList<Date> dates) {
+        ArrayList<Date> newDates = new ArrayList<Date>();
+        for(Date date: dates){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            if (cal.get(Calendar.DAY_OF_WEEK) == 1){
+                newDates.add(plusDate(date, 1).toDate());
+            }else if(cal.get(Calendar.DAY_OF_WEEK) ==7){
+                newDates.add(plusDate(date, 2).toDate());
+            }else{
+                newDates.add(date);
+            }
+        }
+        timelineView.deactivateDates(newDates);
+    }
+
+    public DateTime plusDate(Date date, int plus){
+        DateTime dtOrg = new DateTime(date);
+        return dtOrg.plusDays(plus);
     }
 }

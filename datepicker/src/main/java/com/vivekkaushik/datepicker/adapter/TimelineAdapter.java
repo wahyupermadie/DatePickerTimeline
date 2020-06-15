@@ -14,6 +14,7 @@ import com.vivekkaushik.datepicker.TimelineView;
 import com.vivekkaushik.datepicker.helper.Utils;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -25,19 +26,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     private Calendar calendar = Calendar.getInstance();
     private TimelineView timelineView;
-    private Date[] deactivatedDates;
-
-    private int oldPost;
-
+    private ArrayList<Date> deactivatedDates;
     private OnDateSelectedListener listener;
-
     private View selectedView;
-
+    private int adapterSize;
     private int selectedPosition;
 
-    public TimelineAdapter(TimelineView timelineView, int selectedPosition) {
+    public TimelineAdapter(TimelineView timelineView, int selectedPosition, int adapterSize) {
         this.timelineView = timelineView;
         this.selectedPosition = selectedPosition;
+        this.adapterSize = adapterSize;
+    }
+
+    public void setAdapterSize(int size){
+        this.adapterSize = size;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -77,7 +80,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                     holder.monthView.setTextColor(Color.WHITE);
                     holder.dateView.setTextColor(Color.WHITE);
                     holder.dayView.setTextColor(Color.WHITE);
-                    for (int i = 1; i < 10; i++){
+                    for (int i = 1; i < adapterSize; i++){
                         if (i != position){
                             holder.monthView.setTextColor(Color.BLACK);
                             holder.dateView.setTextColor(Color.BLACK);
@@ -91,24 +94,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                     selectedView = v;
                     if (listener != null) listener.onDateSelected(year, month, day, dayOfWeek);
                 } else {
-                    for (int i = 1; i < 10; i++){
+                    for (int i = 1; i < adapterSize; i++){
                         if (i != position) {
                             if (dayOfWeek == 7 || dayOfWeek == 1) {
                                 holder.monthView.setTextColor(Color.RED);
                                 holder.dateView.setTextColor(Color.RED);
                                 holder.dayView.setTextColor(Color.RED);
                                 holder.rootView.setBackground(null);
-                            }else if (disabledContractState){
+                            }else {
                                 holder.monthView.setTextColor(timelineView.getDisabledDateColor());
                                 holder.dateView.setTextColor(timelineView.getDisabledDateColor());
                                 holder.dayView.setTextColor(timelineView.getDisabledDateColor());
-                                holder.rootView.setBackground(null);
-                            }else if(position == 0){
-                                holder.rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
-                            }else{
-                                holder.monthView.setTextColor(Color.BLACK);
-                                holder.dateView.setTextColor(Color.BLACK);
-                                holder.dayView.setTextColor(Color.BLACK);
                                 holder.rootView.setBackground(null);
                             }
                             notifyItemChanged(i);
@@ -137,10 +133,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 10;
+        return adapterSize;
     }
 
-    public void disableDates(Date[] dates) {
+    public void disableDates(ArrayList<Date> dates) {
         this.deactivatedDates = dates;
         notifyDataSetChanged();
     }
@@ -170,20 +166,22 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             monthView.setText(MONTH_NAME[month].toUpperCase(Locale.US));
             dateView.setText(String.valueOf(day));
 
-//            for (Date date : deactivatedDates) {
-//                Calendar tempCalendar = Calendar.getInstance();
-//                tempCalendar.setTime(date);
-//                if (tempCalendar.get(Calendar.DAY_OF_MONTH) == day &&
-//                        tempCalendar.get(Calendar.MONTH) == month &&
-//                        tempCalendar.get(Calendar.YEAR) == year) {
-//                    monthView.setTextColor(timelineView.getDisabledDateColor());
-//                    dateView.setTextColor(timelineView.getDisabledDateColor());
-//                    dayView.setTextColor(timelineView.getDisabledDateColor());
-//
-//                    rootView.setBackground(null);
-//                    return true;
-//                }
-//            }
+            if (deactivatedDates != null && dayOfWeek != 7 || deactivatedDates != null && dayOfWeek != 1){
+                for (Date date : deactivatedDates) {
+                    Calendar tempCalendar = Calendar.getInstance();
+                    tempCalendar.setTime(date);
+                    if (tempCalendar.get(Calendar.DAY_OF_MONTH) == day &&
+                            tempCalendar.get(Calendar.MONTH) == month &&
+                            tempCalendar.get(Calendar.YEAR) == year) {
+                        monthView.setTextColor(timelineView.getDisabledDateColor());
+                        dateView.setTextColor(timelineView.getDisabledDateColor());
+                        dayView.setTextColor(timelineView.getDisabledDateColor());
+
+                        rootView.setBackground(null);
+                        return true;
+                    }
+                }
+            }
 
             if (dayOfWeek == 7 || dayOfWeek == 1){
                 monthView.setTextColor(Color.RED);
@@ -194,7 +192,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 return true;
             }
 
-            if (disabled){
+            if (disabled || position == 0){
                 monthView.setTextColor(timelineView.getDisabledDateColor());
                 dateView.setTextColor(timelineView.getDisabledDateColor());
                 dayView.setTextColor(timelineView.getDisabledDateColor());
@@ -202,17 +200,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 return true;
             }
 
-            if (selectedPosition == position && position != 0) {
+            if (selectedPosition == position) {
                 rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_shape));
                 monthView.setTextColor(Color.WHITE);
                 dateView.setTextColor(Color.WHITE);
                 dayView.setTextColor(Color.WHITE);
                 selectedView = rootView;
-            } else if (position == 0){
-                rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
-                monthView.setTextColor(Color.BLACK);
-                dateView.setTextColor(Color.BLACK);
-                dayView.setTextColor(Color.BLACK);
             }else {
                 rootView.setBackground(null);
                 monthView.setTextColor(Color.BLACK);
@@ -220,6 +213,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 dayView.setTextColor(Color.BLACK);
             }
 
+//             else if (position == 0){
+//                rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
+//                monthView.setTextColor(Color.BLACK);
+//                dateView.setTextColor(Color.BLACK);
+//                dayView.setTextColor(Color.BLACK);
+//            }
             return false;
         }
     }
