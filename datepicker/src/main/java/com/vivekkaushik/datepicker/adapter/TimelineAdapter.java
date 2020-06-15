@@ -31,6 +31,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
     private View selectedView;
     private int adapterSize;
     private int selectedPosition;
+    private int oldPosition;
 
     public TimelineAdapter(TimelineView timelineView, int selectedPosition, int adapterSize) {
         this.timelineView = timelineView;
@@ -87,6 +88,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                             holder.dayView.setTextColor(Color.BLACK);
                             holder.rootView.setBackground(null);
                             notifyItemChanged(i);
+                        } else if(position == oldPosition){
+                            holder.rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
+                            holder.monthView.setTextColor(Color.BLACK);
+                            holder.dateView.setTextColor(Color.BLACK);
+                            holder.dayView.setTextColor(Color.BLACK);
+                        }else{
+                            holder.rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
+                            holder.monthView.setTextColor(Color.BLACK);
+                            holder.dateView.setTextColor(Color.BLACK);
+                            holder.dayView.setTextColor(Color.BLACK);
                         }
                     }
                     notifyItemChanged(position);
@@ -100,13 +111,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                                 holder.monthView.setTextColor(Color.RED);
                                 holder.dateView.setTextColor(Color.RED);
                                 holder.dayView.setTextColor(Color.RED);
-                                holder.rootView.setBackground(null);
                             }else {
                                 holder.monthView.setTextColor(timelineView.getDisabledDateColor());
                                 holder.dateView.setTextColor(timelineView.getDisabledDateColor());
                                 holder.dayView.setTextColor(timelineView.getDisabledDateColor());
-                                holder.rootView.setBackground(null);
                             }
+                            holder.rootView.setBackground(null);
                             notifyItemChanged(i);
                         }
                     }
@@ -128,7 +138,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
      * @param selectedPosition active date Position
      */
     public void setSelectedPosition(int selectedPosition) {
-        this.selectedPosition = selectedPosition;
+        this.oldPosition = selectedPosition;
     }
 
     @Override
@@ -200,25 +210,27 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 return true;
             }
 
-            if (selectedPosition == position) {
+            if (oldPosition == position && selectedPosition == -1 || oldPosition == position && selectedPosition == oldPosition){
                 rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_shape));
                 monthView.setTextColor(Color.WHITE);
                 dateView.setTextColor(Color.WHITE);
                 dayView.setTextColor(Color.WHITE);
-                selectedView = rootView;
-            }else {
+            }else if(oldPosition == position) {
+                rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
+                monthView.setTextColor(Color.BLACK);
+                dateView.setTextColor(Color.BLACK);
+                dayView.setTextColor(Color.BLACK);
+            }else if(selectedPosition == position) {
+                rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_shape));
+                monthView.setTextColor(Color.WHITE);
+                dateView.setTextColor(Color.WHITE);
+                dayView.setTextColor(Color.WHITE);
+            } else {
                 rootView.setBackground(null);
                 monthView.setTextColor(Color.BLACK);
                 dateView.setTextColor(Color.BLACK);
                 dayView.setTextColor(Color.BLACK);
             }
-
-//             else if (position == 0){
-//                rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_rounded));
-//                monthView.setTextColor(Color.BLACK);
-//                dateView.setTextColor(Color.BLACK);
-//                dayView.setTextColor(Color.BLACK);
-//            }
             return false;
         }
     }
