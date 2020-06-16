@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.vivekkaushik.datepicker'
-version = '0.1.0'
+version = '0.1.1'
 
 buildscript {
     repositories {
@@ -21,7 +21,7 @@ publish {
     repoName = 'DatePickerLibrary'
     groupId = 'com.vivekkaushik.datepicker'
     artifactId = 'datePickerTimeline'
-    publishVersion = '0.1.0'
+    publishVersion = '0.1.1'
     desc = 'An android package that provides a Horizontal Date Picker.'
     website = 'https://github.com/101Loop/DatePickerTimeline'
 }
@@ -31,7 +31,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 3
         versionName "1.2"
