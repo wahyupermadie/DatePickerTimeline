@@ -62,26 +62,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        final boolean disabledContractState;
-        if (position == 1 && dayOfWeek == 2){
-            disabledContractState = true;
-        }else if (position == 2 && dayOfWeek == 2){
-            disabledContractState = true;
-        }else if(position == 3 && dayOfWeek == 2){
-            disabledContractState = true;
-        }else disabledContractState = position == 1 && dayOfWeek != 1;
-
-        final boolean isDisabled = holder.bind(month, day, dayOfWeek, year, position, disabledContractState);
+        final boolean isDisabled = holder.bind(month, day, dayOfWeek, year, position);
 
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isDisabled && position != 0) {
+                if (!isDisabled) {
                     holder.rootView.setBackground(timelineView.getResources().getDrawable(R.drawable.bg_selected_shape));
                     holder.monthView.setTextColor(Color.WHITE);
                     holder.dateView.setTextColor(Color.WHITE);
                     holder.dayView.setTextColor(Color.WHITE);
-                    for (int i = 1; i < adapterSize; i++){
+                    for (int i = 0; i < adapterSize; i++){
                         if (i != position){
                             holder.monthView.setTextColor(Color.BLACK);
                             holder.dateView.setTextColor(Color.BLACK);
@@ -165,7 +156,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             rootView = itemView.findViewById(R.id.rootView);
         }
 
-        boolean bind(int month, int day, int dayOfWeek, int year, int position, boolean disabled) {
+        boolean bind(int month, int day, int dayOfWeek, int year, int position) {
             monthView.setTextColor(timelineView.getMonthTextColor());
             dateView.setTextColor(timelineView.getDateTextColor());
             dayView.setTextColor(timelineView.getDayTextColor());
@@ -196,14 +187,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
                 dateView.setTextColor(Color.RED);
                 dayView.setTextColor(Color.RED);
 
-                rootView.setBackground(null);
-                return true;
-            }
-
-            if (disabled || position == 0){
-                monthView.setTextColor(timelineView.getDisabledDateColor());
-                dateView.setTextColor(timelineView.getDisabledDateColor());
-                dayView.setTextColor(timelineView.getDisabledDateColor());
                 rootView.setBackground(null);
                 return true;
             }
