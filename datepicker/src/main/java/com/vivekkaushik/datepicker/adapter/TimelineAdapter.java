@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 import com.vivekkaushik.datepicker.R;
 import com.vivekkaushik.datepicker.TimelineView;
 import com.vivekkaushik.datepicker.helper.Utils;
-
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,7 +159,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             dateView.setTextColor(timelineView.getDateTextColor());
             dayView.setTextColor(timelineView.getDayTextColor());
 
-            dayView.setText(Utils.Companion.getMapperDate(WEEK_DAYS[dayOfWeek].toUpperCase(Locale.US)));
+            dayView.setText(Utils.Companion.getMapperDate(dayOfWeek));
             monthView.setText(MONTH_NAME[month].toUpperCase(Locale.US));
             dateView.setText(String.valueOf(day));
 
@@ -215,6 +213,4 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
             return false;
         }
     }
-
-
 }

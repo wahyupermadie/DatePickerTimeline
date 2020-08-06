@@ -1,5 +1,6 @@
 package com.vivekkaushik.datepicker.helper
 
+import android.util.Log
 import org.joda.time.DateTime
 import java.util.ArrayList
 import java.util.Date
@@ -7,15 +8,16 @@ import java.util.HashMap
 
 interface Utils{
     companion object{
-        fun getMapperDate(dateTag : String) : String {
-            val date = HashMap<String, String>().apply {
-                this["SUN"] = "Minggu"
-                this["MON"] = "Senin"
-                this["TUE"] = "Selasa"
-                this["WED"] = "Rabu"
-                this["THU"] = "Kamis"
-                this["FRI"] = "Jum'at"
-                this["SAT"] = "Sabtu"
+        fun getMapperDate(dateTag : Int) : String {
+            Log.d("DATA_GUE","DATA "+dateTag)
+            val date = HashMap<Int, String>().apply {
+                this[1] = "Minggu"
+                this[2] = "Senin"
+                this[3] = "Selasa"
+                this[4] = "Rabu"
+                this[5] = "Kamis"
+                this[6] = "Jum'at"
+                this[7] = "Sabtu"
             }
             return date[dateTag]!!
         }
