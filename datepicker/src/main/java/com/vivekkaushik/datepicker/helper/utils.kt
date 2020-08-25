@@ -9,7 +9,6 @@ import java.util.HashMap
 interface Utils{
     companion object{
         fun getMapperDate(dateTag : Int) : String {
-            Log.d("DATA_GUE","DATA "+dateTag)
             val date = HashMap<Int, String>().apply {
                 this[1] = "Minggu"
                 this[2] = "Senin"

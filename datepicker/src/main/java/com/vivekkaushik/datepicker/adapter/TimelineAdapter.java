@@ -35,6 +35,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         this.timelineView = timelineView;
         this.selectedPosition = selectedPosition;
         this.adapterSize = adapterSize;
+        this.oldPosition = -1;
     }
 
     public void setAdapterSize(int size){
